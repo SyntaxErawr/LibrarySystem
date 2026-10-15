@@ -1,0 +1,11 @@
+const router = require('express').Router();
+const { protect, authorize } = require('../middleware/authMiddleware');
+const controller = require('../controllers/bookController');
+router.use(protect);
+router.get('/stats', authorize('admin', 'librarian'), controller.stats);
+router.get('/', controller.list);
+router.get('/:id', controller.details);
+router.post('/', authorize('admin', 'librarian'), controller.create);
+router.put('/:id', authorize('admin', 'librarian'), controller.update);
+router.delete('/:id', authorize('admin', 'librarian'), controller.archive);
+module.exports = router;

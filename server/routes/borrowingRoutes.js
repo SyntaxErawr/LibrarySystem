@@ -1,0 +1,16 @@
+const router = require('express').Router();
+const { protect, authorize } = require('../middleware/authMiddleware');
+const controller = require('../controllers/borrowingController');
+router.use(protect);
+router.get('/summary', controller.summary);
+router.get('/my', controller.list);
+router.get('/students', authorize('admin', 'librarian'), controller.students);
+router.get('/', authorize('admin', 'librarian'), controller.list);
+router.post('/', authorize('admin', 'librarian'), controller.issue);
+router.post('/requests', authorize('student'), controller.requestBook);
+router.get('/requests/status', authorize('student'), controller.catalogStatus);
+router.patch('/:id/cancel', authorize('student'), controller.cancel);
+router.patch('/:id/approve', authorize('admin', 'librarian'), controller.approve);
+router.patch('/:id/reject', authorize('admin', 'librarian'), controller.reject);
+router.patch('/:id/return', authorize('admin', 'librarian'), controller.returnBook);
+module.exports = router;

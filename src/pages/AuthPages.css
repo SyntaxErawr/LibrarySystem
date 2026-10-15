@@ -1,0 +1,77 @@
+/* Supplied By the Book palette. Scoped to authentication pages only. */
+.auth-page.login-page {
+  --auth-green: #2a6b4b;
+  --auth-light-green: #8fca88;
+  --auth-cream: #fee8c7;
+  min-height: 100svh;
+  max-width: none;
+  margin: 0;
+  padding: 40px max(40px, calc((100vw - 1240px) / 2));
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0;
+  font-family: Arial, sans-serif;
+  color: var(--auth-green);
+  background: var(--auth-cream);
+  position: relative;
+  isolation: isolate;
+}
+.auth-page .auth-illustration {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url('../assets/auth/bookshelf-background.png') left center / 100% 100% no-repeat;
+}
+.auth-page .login-card {
+  width: 370px;
+  flex-shrink: 0;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--auth-cream);
+}
+.auth-page .auth-logo { display: block; width: 290px; max-width: 100%; height: 190px; object-fit: contain; margin: 0 auto 10px; }
+.auth-page .auth-heading { color: var(--auth-green); font-family: Arial, sans-serif; font-size: 42px; font-weight: 900; line-height: 1.1; text-align: center; margin: 0 0 28px; letter-spacing: -1.5px; }
+.auth-page .login-card form { margin: 0 0 22px; }
+.auth-page .field { margin-bottom: 18px; }
+.auth-page .field > label { color: var(--auth-green); font-size: 14px; font-weight: 700; margin-bottom: 7px; }
+.auth-page input, .auth-page select { min-height: 46px; border: 1px solid transparent; border-radius: 28px; padding: 11px 17px; background: #fff; color: #432f2a; }
+.auth-page .password-input { border: 1px solid transparent; border-radius: 28px; background: #fff; overflow: hidden; }
+.auth-page .password-input input { min-width: 0; background: transparent; }
+.auth-page .password-input .password-toggle { padding: 10px 15px; color: var(--auth-green); border-radius: 0 28px 28px 0; font-weight: 700; }
+.auth-page .password-input .password-toggle:hover { background: #fee8c7; }
+.auth-page .login-card button[type="submit"] { min-height: 46px; border: 0; border-radius: 28px; padding: 11px 20px; color: var(--auth-green); background: var(--auth-light-green); font-weight: 700; font-size: 17px; }
+.auth-page .login-card button[type="submit"]:hover:not(:disabled) { background: var(--auth-green); color: #fff; }
+.auth-page .login-card button[type="submit"]:disabled { opacity: .7; cursor: not-allowed; }
+.auth-page input:focus-visible, .auth-page select:focus-visible, .auth-page button:focus-visible, .auth-page a:focus-visible { outline: 3px solid var(--auth-green); outline-offset: 3px; }
+.auth-page .requirements { font-size: 11px; line-height: 1.5; margin-top: 6px; }
+.auth-page .requirements .neutral, .auth-page .muted { color: #52624a; }
+.auth-page .field-error:empty { margin: 0; }
+.auth-page .field-error { font-size: 12px; }
+.auth-page input[aria-invalid="true"], .auth-page select[aria-invalid="true"], .auth-page .password-input:has(input[aria-invalid="true"]) { border-color: #945237; }
+.auth-page .auth-switch { text-align: center; color: var(--auth-green); font-size: 12px; margin: 0; }
+.auth-page .auth-switch a { color: inherit; font-weight: 700; text-underline-offset: 3px; }
+.auth-page .account-help { text-align: center; font-size: 11px; margin: 12px 0 0; }
+.auth-page .success, .auth-page .error { font-size: 13px; }
+.registration-page.auth-page { align-items: flex-start; padding-top: 24px; padding-bottom: 40px; }
+.registration-page.auth-page .auth-logo { width: 220px; height: 140px; margin-bottom: 12px; }
+.registration-page.auth-page .auth-heading { font-size: 29px; letter-spacing: -1px; margin-bottom: 26px; white-space: nowrap; }
+.registration-page.auth-page .field { margin-bottom: 16px; }
+.registration-page.auth-page .field .small { font-size: 11px; margin: 6px 0 0; }
+@media (min-width: 1600px) { .auth-page .login-card { margin-right: 3vw; } }
+@media (max-width: 1050px) {
+  .auth-page.login-page { padding-right: 28px; }
+  .auth-page .auth-illustration { background-position: 30% center; }
+}
+@media (max-width: 700px) {
+  .auth-page.login-page { padding: 32px 24px; justify-content: center; align-items: center; }
+  .auth-page .auth-illustration { background-size: auto 380px; background-position: left top; opacity: .18; }
+  .auth-page .login-card { width: min(100%, 390px); padding: 24px; border-radius: 26px; }
+  .auth-page .auth-logo { width: 240px; height: 160px; }
+  .auth-page .auth-heading { font-size: 36px; }
+  .registration-page.auth-page { align-items: flex-start; }
+  .registration-page.auth-page .auth-heading { font-size: clamp(22px, 6vw, 29px); }
+}

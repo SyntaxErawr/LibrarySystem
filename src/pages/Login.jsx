@@ -1,3 +1,5 @@
+import byTheBookLogo from '../assets/auth/by-the-book-logo.png';
+import './AuthPages.css';
 import { useState } from 'react';
 import { Link, Navigate, useLocation } from 'react-router';
 import { useAuth } from '../context/AuthContext';
@@ -26,16 +28,16 @@ export default function Login() {
     catch (err) { setError(err.message); }
     finally { setBusy(false); }
   }
-  return <main className="login-page">
-    <section className="login-intro"><span className="eyebrow">YOUR SCHOOL LIBRARY</span><h1>A place to learn.<br />Room to grow.</h1><p>Books, ideas, and a little curiosity. Welcome to your library.</p><div className="book-art" aria-hidden="true"><span /><span /><span /><span /></div></section>
-    <section className="login-card"><span className="brand-mark" aria-hidden="true">L</span><h2>Welcome back</h2><p className="muted">Sign in to your library account.</p>
+  return <main className="login-page auth-page">
+    <div className="auth-illustration" aria-hidden="true" />
+    <section className="login-card"><img className="auth-logo" src={byTheBookLogo} alt="By the Book" /><h2 className="auth-heading">WELCOME</h2>
       {location.state?.registrationSuccess && <p role="status" className="success">{location.state.registrationSuccess}</p>}
       <form onSubmit={submit} noValidate>
         <EmailField value={values.email} onChange={change} onBlur={blur} touched={touched.email} error={!emailChecks(values.email).every(check => check.valid) ? 'Enter a valid email address.' : ''} />
         <PasswordField value={values.password} onChange={change} onBlur={blur} touched={touched.password} error={!values.password ? 'Password is required.' : ''} autoComplete="current-password" />
         {(error || sessionError) && <p role="alert" className="error">{error || sessionError}</p>}
         <button type="submit" disabled={busy || !valid}>{busy ? 'Signing in...' : 'Sign in'}</button>
-      </form><Link className="button secondary full-width" to="/register">Create Student Account</Link><p className="small muted account-help">Staff account? Contact your administrator.</p>
+      </form><p className="auth-switch">Don't have an account? <Link to="/register">Create Account</Link></p><p className="small muted account-help">Staff account? Contact your administrator.</p>
     </section>
   </main>;
 }

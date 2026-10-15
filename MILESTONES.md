@@ -191,6 +191,8 @@ See [FINAL_TESTING.md](FINAL_TESTING.md) for changed files, evidence, limitation
 
 ## Remaining owner steps
 
+Render startup follow-up: added credential-safe stage/category diagnostics and production-only injected-environment loading. Backend **90/90 tests** and lint passed. Read-only Atlas audit and local production startup/connected health/CORS checks passed without editing real records or `.env`. Actual Render failure remains unconfirmed until the new diagnostic line is available. See [RENDER_STARTUP.md](RENDER_STARTUP.md) for all startup conditions, required settings and exact commit/push handoff. No deployment performed.
+
 1. Review the final documentation and demonstrate all roles manually using designated test records.
 2. Review repository contents/history before publishing, then configure actual hosting URLs, private environment variables and Atlas/proxy access.
 3. Approve deployment separately. Hosted health, deep-link refresh and all-role smoke checks remain pending until then.

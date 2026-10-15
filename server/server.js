@@ -1,10 +1,14 @@
 const path = require('node:path');
-require('dotenv').config({ path: path.join(__dirname, '.env'), quiet: true });
+// Hosting injects process.env directly. Never depend on a deployed .env file.
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: path.join(__dirname, '.env'), quiet: true, override: false });
+}
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const { runtimeConfig } = require('./config/runtime');
+const { startupStage } = require('./config/startupDiagnostics');
 
 function createApp({ clientUrl = runtimeConfig().clientUrl, trustProxy = runtimeConfig().trustProxy } = {}) {
   const app = express();
@@ -73,19 +77,18 @@ function createApp({ clientUrl = runtimeConfig().clientUrl, trustProxy = runtime
 }
 
 async function start() {
-  const { port, clientUrl, trustProxy } = runtimeConfig();
-  require('./middleware/authMiddleware').jwtSecret();
-  await connectDB();
-  await require('./models/User').init();
-  await require('./models/Book').init();
-  await require('./models/Borrowing').init();
-  const server = createApp({ clientUrl, trustProxy }).listen(port, '0.0.0.0');
-  try {
+  const { port, clientUrl, trustProxy } = await startupStage('environment', () => runtimeConfig());
+  await startupStage('jwt-configuration', () => require('./middleware/authMiddleware').jwtSecret());
+  await startupStage('database-connect', () => connectDB());
+  await startupStage('user-indexes', () => require('./models/User').init());
+  await startupStage('book-indexes', () => require('./models/Book').init());
+  await startupStage('borrowing-indexes', () => require('./models/Borrowing').init());
+  const app = await startupStage('express-setup', () => createApp({ clientUrl, trustProxy }));
+  const server = await startupStage('http-listen', async () => {
+    const server = app.listen(port, '0.0.0.0');
     await new Promise((resolve, reject) => { server.once('listening', resolve); server.once('error', reject); });
-  } catch {
-    await mongoose.disconnect();
-    throw new Error('API could not listen. Check PORT.');
-  }
+    return server;
+  });
   console.log(`Library API listening on port ${port}`);
   for (const signal of ['SIGINT', 'SIGTERM']) {
     process.once(signal, () => {
@@ -103,7 +106,7 @@ async function start() {
 
 if (require.main === module) {
   start().catch(async () => {
-    console.error('API startup failed. Check server/.env (MONGO_URI, JWT_SECRET, PORT, CLIENT_URL), Atlas access and user indexes. No credentials are logged.');
+    console.error('API startup failed. See the preceding [startup] stage/category. Configure hosting environment variables; a local .env file is not required. No credentials are logged.');
     await mongoose.disconnect();
     process.exitCode = 1;
   });

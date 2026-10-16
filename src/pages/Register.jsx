@@ -39,7 +39,7 @@ export default function Register() {
     } finally { setBusy(false); }
   }
   const common = { onChange: change, onBlur: blur };
-  return <main className="login-page registration-page auth-page"><div className="auth-illustration" aria-hidden="true" /><section className="login-card"><img className="auth-logo" src={byTheBookLogo} alt="By the Book" /><h2 className="auth-heading">CREATE ACCOUNT</h2><form onSubmit={submit} noValidate>
+  return <main className="login-page registration-page auth-page"><div className="auth-illustration" aria-hidden="true" /><section className="login-card"><img className="auth-logo" src={byTheBookLogo} alt="By The Book" /><h2 className="auth-heading">CREATE ACCOUNT</h2><form onSubmit={submit} noValidate>
     <TextField label="Full name" name="name" value={values.name} touched={touched.name} error={errors.name} maxLength={100} autoComplete="name" {...common} />
     <EmailField value={values.email} touched={touched.email} error={errors.email} {...common} />
     <StudentFields values={values} touched={touched} errors={errors} {...common} />

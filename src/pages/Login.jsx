@@ -30,7 +30,7 @@ export default function Login() {
   }
   return <main className="login-page auth-page">
     <div className="auth-illustration" aria-hidden="true" />
-    <section className="login-card"><img className="auth-logo" src={byTheBookLogo} alt="By the Book" /><h2 className="auth-heading">WELCOME</h2>
+    <section className="login-card"><img className="auth-logo" src={byTheBookLogo} alt="By The Book" /><h2 className="auth-heading">WELCOME</h2>
       {location.state?.registrationSuccess && <p role="status" className="success">{location.state.registrationSuccess}</p>}
       <form onSubmit={submit} noValidate>
         <EmailField value={values.email} onChange={change} onBlur={blur} touched={touched.email} error={!emailChecks(values.email).every(check => check.valid) ? 'Enter a valid email address.' : ''} />

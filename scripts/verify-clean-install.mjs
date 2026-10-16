@@ -22,7 +22,7 @@ try {
   await run('npm ci --no-audit --no-fund', target);
   await run('npm run build', target);
   const html = await readFile(path.join(target, 'dist/index.html'), 'utf8');
-  if (!html.includes('School Library')) throw new Error('Clean build output was not generated.');
+  if (!html.includes('By The Book')) throw new Error('Clean build output was not generated.');
   const assets = await readdir(path.join(target, 'dist/assets'));
   const javascript = (await Promise.all(assets.filter(name => name.endsWith('.js')).map(name => readFile(path.join(target, 'dist/assets', name), 'utf8')))).join('\n');
   if (javascript.includes('http://localhost:5000/api') || !javascript.includes('https://library-api.example.test/api')) throw new Error('Hosted API configuration was not compiled correctly.');

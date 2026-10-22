@@ -10,7 +10,7 @@ const connectDB = require('./config/db');
 const { runtimeConfig } = require('./config/runtime');
 const { startupStage } = require('./config/startupDiagnostics');
 
-function createApp({ clientUrl = runtimeConfig().clientUrl, trustProxy = runtimeConfig().trustProxy } = {}) {
+function createApp({ clientUrl = runtimeConfig().clientUrl, trustProxy = runtimeConfig().trustProxy, allowLocalFlutterWeb = runtimeConfig().allowLocalFlutterWeb } = {}) {
   const app = express();
   app.disable('x-powered-by');
   app.set('trust proxy', trustProxy);
@@ -22,6 +22,9 @@ function createApp({ clientUrl = runtimeConfig().clientUrl, trustProxy = runtime
   app.use(cors({
     origin(origin, callback) {
       if (!origin || origin === clientUrl) return callback(null, true);
+      // Explicit opt-in also works on Render; only literal HTTP loopback origins qualify.
+      const localPort = /^http:\/\/(?:localhost|127\.0\.0\.1):([0-9]{1,5})$/.exec(origin)?.[1];
+      if (allowLocalFlutterWeb === true && localPort && Number(localPort) >= 1 && Number(localPort) <= 65535) return callback(null, true);
       const error = new Error('Origin is not allowed.');
       error.status = 403;
       callback(error);
@@ -77,13 +80,13 @@ function createApp({ clientUrl = runtimeConfig().clientUrl, trustProxy = runtime
 }
 
 async function start() {
-  const { port, clientUrl, trustProxy } = await startupStage('environment', () => runtimeConfig());
+  const { port, clientUrl, trustProxy, allowLocalFlutterWeb } = await startupStage('environment', () => runtimeConfig());
   await startupStage('jwt-configuration', () => require('./middleware/authMiddleware').jwtSecret());
   await startupStage('database-connect', () => connectDB());
   await startupStage('user-indexes', () => require('./models/User').init());
   await startupStage('book-indexes', () => require('./models/Book').init());
   await startupStage('borrowing-indexes', () => require('./models/Borrowing').init());
-  const app = await startupStage('express-setup', () => createApp({ clientUrl, trustProxy }));
+  const app = await startupStage('express-setup', () => createApp({ clientUrl, trustProxy, allowLocalFlutterWeb }));
   const server = await startupStage('http-listen', async () => {
     const server = app.listen(port, '0.0.0.0');
     await new Promise((resolve, reject) => { server.once('listening', resolve); server.once('error', reject); });

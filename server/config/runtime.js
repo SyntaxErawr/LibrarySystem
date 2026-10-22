@@ -9,6 +9,6 @@ function runtimeConfig(env = process.env) {
   if (production && (url.protocol !== 'https:' || ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname))) throw new Error('Production requires an HTTPS frontend origin.');
   const proxy = env.TRUST_PROXY || '0';
   if (!['0', '1'].includes(proxy)) throw new Error('TRUST_PROXY must be 0 or 1.');
-  return { port, clientUrl, trustProxy: proxy === '1' ? 1 : false };
+  return { port, clientUrl, trustProxy: proxy === '1' ? 1 : false, allowLocalFlutterWeb: env.ALLOW_LOCAL_FLUTTER_WEB === 'true' };
 }
 module.exports = { runtimeConfig };
